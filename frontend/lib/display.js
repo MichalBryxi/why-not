@@ -7,22 +7,27 @@ if ( ! Detector.webgl ) {
 
 }
 
-socket.on("msg", function(msg) {
-  pointLightL.position.x = msg.x;
-  pointLightL.position.y = msg.y;
-  pointLightL.position.z = msg.z;
+socket.on("server2display", function(msg) {
+  // console.log(msg);
+  var x = msg.message.x * 90 - 2400,
+      y = msg.message.z * 20 + 150,
+      z = 0;
 
-  pointLightR.position.x = msg.x;
-  pointLightR.position.y = msg.y;
-  pointLightR.position.z = msg.z-1500;
+  pointLightL.position.x = x;
+  pointLightL.position.y = y;
+  pointLightL.position.z = z;
 
-  particlesL.position.x = msg.x;
-  particlesL.position.y = msg.y;
-  particlesL.position.z = msg.z;
+  pointLightR.position.x = x;
+  pointLightR.position.y = y;
+  pointLightR.position.z = z-1500;
 
-  particlesR.position.x = msg.x;
-  particlesR.position.y = msg.y;
-  particlesR.position.z = msg.z-1500;
+  particlesL.position.x = x;
+  particlesL.position.y = y;
+  particlesL.position.z = z;
+
+  particlesR.position.x = x;
+  particlesR.position.y = y;
+  particlesR.position.z = z-1500;
 });
 
 var container, stats;
@@ -34,40 +39,43 @@ var pointLightL;
 var particleSystem;
 var tick = 0;
 var clock = new THREE.Clock(true);
+var settings = {
+  isometricCamera: false,
+  morePonnies: false
+};
 
 // particlesL passed during each spawned
 var particlesL = {
   position: new THREE.Vector3(),
-  positionRandomness: .3,
+  positionRandomness: 0,
   velocity: new THREE.Vector3(),
-  velocityRandomness: .5,
+  velocityRandomness: 0,
   color: 0xff99ff,
   colorRandomness: .5,
-  turbulence: .5,
-  lifetime: 2,
+  turbulence: 0,
+  lifetime: 15,
   size: 2,
   sizeRandomness: 2
 };
 var particlesR = {
   position: new THREE.Vector3(),
-  positionRandomness: .3,
+  positionRandomness: 0,
   velocity: new THREE.Vector3(),
-  velocityRandomness: .5,
+  velocityRandomness: 0,
   color: 0xff99ff,
   colorRandomness: .5,
-  turbulence: .5,
-  lifetime: 2,
+  turbulence: 0,
+  lifetime: 15,
   size: 2,
   sizeRandomness: 2
 };
 
 var spawnerparticlesL = {
   spawnRate: 1,
-  horizontalSpeed: 1.5,
-  verticalSpeed: 1.33,
+  horizontalSpeed: 0,
+  verticalSpeed: 0,
   timeScale: 1
 }
-
 
 var parameters = {
   width: 2000,
@@ -85,12 +93,36 @@ init();
 animate();
 
 function init() {
+  initCamera();
   initScene();
+  initControls();
   initWater();
   initSkyBox();
   initBoat();
+  // initPony();
   initFireflies();
   initParticles();
+}
+
+function initControls () {
+  var gui = new dat.GUI();
+  gui.add(settings, 'isometricCamera').onChange(function (newValue) {
+    initCamera();
+  });
+  gui.add(settings, 'morePonnies').onChange(function (newValue) {
+    initPony();
+  });
+}
+
+function initCamera (isometric) {
+  if (settings.isometricCamera) {
+    var m = 4;
+    camera = new THREE.OrthographicCamera( -window.innerWidth*m, window.innerWidth*m, window.innerHeight*m, -window.innerHeight*m, 1, 1000000 );
+    camera.position.set( -1800, 100, 2000 );
+  } else {
+    camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 0.5, 3000000 );
+    camera.position.set( 1000, 750, 1000 );
+  }
 }
 
 function initScene () {
@@ -106,9 +138,6 @@ function initScene () {
 
   scene = new THREE.Scene();
 
-  camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 0.5, 3000000 );
-  camera.position.set( 1000, 750, 1000 );
-
   controls = new THREE.OrbitControls( camera, renderer.domElement );
   controls.enablePan = false;
   controls.minDistance = 1000.0;
@@ -119,7 +148,7 @@ function initScene () {
   scene.add( new THREE.AmbientLight( 0x444444 ) );
 
   light = new THREE.DirectionalLight( 0xffffbb, 1 );
-  light.position.set( - 1, 1, - 1 );
+  light.position.set( 1000, 1000, - 1000 );
   scene.add( light );
 }
 
@@ -204,26 +233,49 @@ function initSkyBox () {
 
 function initBoat () {
   var loader = new THREE.STLLoader();
-    loader.load( './models/rowing_boat.stl', function ( geometry ) {
+  loader.load( './models/rowing_boat.stl', function ( geometry ) {
 
-      var material = new THREE.MeshPhongMaterial( {
-					color: 0x966F33,
-					shininess: 10,
-					specular: 0x111111,
-					shading: THREE.SmoothShading
-				} );
-      var mesh = new THREE.Mesh( geometry, material );
+    var material = new THREE.MeshPhongMaterial( {
+				color: 0x966F33,
+				shininess: 10,
+				specular: 0x111111,
+				shading: THREE.SmoothShading
+			} );
+    var mesh = new THREE.Mesh( geometry, material );
 
-      mesh.position.set( 0, -120, 0 );
-      mesh.rotation.set( - Math.PI / 2, 0, 0 );
-      mesh.scale.set( 20.1, 20.1, 20.1 );
+    mesh.position.set( 0, -120, 0 );
+    mesh.rotation.set( - Math.PI / 2, 0, 0 );
+    mesh.scale.set( 20.1, 20.1, 20.1 );
 
-      mesh.castShadow = true;
-      mesh.receiveShadow = true;
+    mesh.castShadow = true;
+    mesh.receiveShadow = true;
 
-      scene.add( mesh );
+    scene.add( mesh );
 
-    } );
+  } );
+}
+
+function initPony () {
+  var loader = new THREE.STLLoader();
+  loader.load( './models/applejack.stl', function ( geometry ) {
+
+    var material = new THREE.MeshPhongMaterial( {
+				color: 0xFFC0CB,
+				shininess: 10,
+				specular: 0x111111,
+				shading: THREE.SmoothShading
+			} );
+    var mesh = new THREE.Mesh( geometry, material );
+
+    mesh.position.set( -1200, 0, 200 );
+    mesh.rotation.set( - Math.PI / 2, 0, Math.PI/2 );
+    mesh.scale.set( 20.1, 20.1, 20.1 );
+
+    mesh.castShadow = true;
+    mesh.receiveShadow = true;
+
+    scene.add( mesh );
+  } );
 }
 
 function initFireflies () {
