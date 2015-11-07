@@ -15,6 +15,6 @@ var sendEvent = _.throttle(function (e) {
   document.getElementById("rotationGamma").innerHTML = e.rotationRate.gamma;
 
   socket.emit("controller2server", newData);
-}, 100);
+}, 50);
 
 window.addEventListener("devicemotion", sendEvent, false);
