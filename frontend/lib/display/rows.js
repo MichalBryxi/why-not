@@ -43,9 +43,10 @@ function initFireflies () {
     return newLight
   }
 
-  rows.forEach(function (row) {
-    row.l.light = createLight( 0xaa0000 );
-    row.r.light = createLight( 0x0000aa );
+  colors = [0xaa0000, 0x00aa00, 0x0000aa, 0xaa00aa];
+  rows.forEach(function (row, index) {
+    row.l.light = createLight(colors[index]);
+    row.r.light = createLight(colors[index]);
 
     scene.add( row.l.light );
     scene.add( row.r.light );
