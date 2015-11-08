@@ -1,34 +1,8 @@
 var particleSystem;
 var clock = new THREE.Clock(true);
-var pointLightR;
-var pointLightL;
+// var pointLightR;
+// var pointLightL;
 var sphere;
-
-// particlesL passed during each spawned
-var particlesL = {
-  position: new THREE.Vector3(),
-  positionRandomness: 0,
-  velocity: new THREE.Vector3(),
-  velocityRandomness: 0,
-  color: 0xff99ff,
-  colorRandomness: .5,
-  turbulence: 0,
-  lifetime: 15,
-  size: 2,
-  sizeRandomness: 2
-};
-var particlesR = {
-  position: new THREE.Vector3(),
-  positionRandomness: 0,
-  velocity: new THREE.Vector3(),
-  velocityRandomness: 0,
-  color: 0xff99ff,
-  colorRandomness: .5,
-  turbulence: 0,
-  lifetime: 15,
-  size: 2,
-  sizeRandomness: 2
-};
 
 var spawnerparticlesL = {
   spawnRate: 1,
@@ -36,6 +10,18 @@ var spawnerparticlesL = {
   verticalSpeed: 0,
   timeScale: 1
 }
+
+var rows = [{}, {}, {}, {}];
+rows = rows.map(function (row) {
+  return {
+    l: {
+      position: new THREE.Vector3()
+    },
+    r: {
+      position: new THREE.Vector3()
+    }
+  }
+});
 
 function initFireflies () {
   function createLight( color ) {
@@ -56,18 +42,46 @@ function initFireflies () {
 
     return newLight
   }
-  pointLightL = createLight( 0xaa0000 );
-  scene.add( pointLightL );
 
-  pointLightR = createLight( 0x0000aa );
-  scene.add( pointLightR );
+  _(rows).forEach(function (row) {
+    row.l.light = createLight( 0xaa0000 );
+    row.r.light = createLight( 0x0000aa );
+
+    scene.add( row.l.light );
+    scene.add( row.r.light );
+  });
 }
 
 function initParticles () {
-  particleSystem = new THREE.GPUParticleSystem({
-    maxParticles: 2500
+  _(rows).forEach(function (row) {
+    row.l.particles = new THREE.GPUParticleSystem({
+      maxParticles: 2500,
+      position: new THREE.Vector3(),
+      positionRandomness: 0,
+      velocity: new THREE.Vector3(),
+      velocityRandomness: 0,
+      color: 0xff99ff,
+      colorRandomness: .5,
+      turbulence: 0,
+      lifetime: 15,
+      size: 2,
+      sizeRandomness: 2
+    });
+    row.r.particles = new THREE.GPUParticleSystem({
+      maxParticles: 2500,
+      position: new THREE.Vector3(),
+      positionRandomness: 0,
+      velocity: new THREE.Vector3(),
+      velocityRandomness: 0,
+      color: 0xff99ff,
+      colorRandomness: .5,
+      turbulence: 0,
+      lifetime: 15,
+      size: 2,
+      sizeRandomness: 2
+    });
+
+    scene.add( row.l.particles );
+    scene.add( row.r.particles );
   });
-  scene.add( particleSystem);
-
-
 }
