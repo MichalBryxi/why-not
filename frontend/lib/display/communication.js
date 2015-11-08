@@ -1,7 +1,6 @@
 var socket = io();
 
 socket.on("server2display", function(msg) {
-  // console.log(msg);
   var x = msg.message.x * 90 - 2400,
       y = msg.message.z * 20 + 150,
       z = 0;
