@@ -32,12 +32,15 @@ function render() {
 
   if (tick < 0) tick = 0;
 
-  if (delta > 0) {
-    particleSystem.spawnParticle(particlesL);
-    particleSystem.spawnParticle(particlesR);
-  }
+  rows.forEach(function (row) {
+    if (delta > 0) {
+        row.l.particles.spawnParticle(row.l);
+        row.r.particles.spawnParticle(row.r);
+    }
 
-  particleSystem.update(tick);
+    row.l.particles.update(tick);
+    row.r.particles.update(tick);
+  });
 
 
   water.material.uniforms.time.value += 1.0 / 60.0;
