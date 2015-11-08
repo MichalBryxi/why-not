@@ -33,7 +33,6 @@ var sendEvent = _.throttle(function (e) {
   document.getElementById("rotationAlpha").innerHTML = _.round(e.rotationRate.alpha, decimals);
   document.getElementById("rotationBeta").innerHTML = _.round(e.rotationRate.beta, decimals);
   document.getElementById("rotationGamma").innerHTML = _.round(e.rotationRate.gamma, decimals);
-  document.getElementById("emitting").innerHTML = JSON.stringify(newData);
 
   socket.emit("controller2server", newData);
 }, 50);
