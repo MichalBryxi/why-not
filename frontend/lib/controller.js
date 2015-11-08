@@ -3,12 +3,28 @@ var decimals = 2;
 var multiplier = 10;
 var speed = 3;
 var cnt = 0;
+var controllerId = 0;
+var cidButtons = Array.prototype.slice.apply(document.getElementById('controller-id-selector').querySelectorAll('button'));
+
+function cidButtonHandler() {
+  var buttonIndex = cidButtons.indexOf(this);
+  cidButtons[controllerId].classList.remove('btn-primary');
+  cidButtons[controllerId].classList.add('btn-default');
+  this.classList.remove('btn-default');
+  this.classList.add('btn-primary');
+  controllerId = buttonIndex;
+}
+
+cidButtons.forEach(function(button) {
+  button.addEventListener('click', cidButtonHandler.bind(button), false);
+});
 
 var sendEvent = _.throttle(function (e) {
   var newData = {
     x: e.rotationRate.alpha,
     y: e.rotationRate.beta,
-    z: e.rotationRate.gamma
+    z: e.rotationRate.gamma,
+    id: controllerId
   };
 
   document.getElementById("accelerationX").innerHTML = _.round(e.accelerationIncludingGravity.x, decimals);
