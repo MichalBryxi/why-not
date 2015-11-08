@@ -15,7 +15,6 @@ app.use('/controller.html', express.static('controller.html'));
 app.use('/display.html', express.static('display.html'));
 
 io.on('connection', function(socket){
-  var id = _.random(1, 4);
   console.log('User connected');
 
   socket.on('disconnect', function(){
@@ -23,8 +22,6 @@ io.on('connection', function(socket){
   });
 
   socket.on("controller2server", function (data) {
-    data.id = id;
-
     console.log('Passing through data ', data);
     socket.broadcast.emit("server2display", {
       channel: socket.channel,
