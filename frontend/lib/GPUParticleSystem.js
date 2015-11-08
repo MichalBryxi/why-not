@@ -198,10 +198,10 @@ THREE.GPUParticleSystem = function(options) {
     return ++i >= self.rand.length ? self.rand[i = 1] : self.rand[i];
   }
 
-  self.particleNoiseTex = THREE.ImageUtils.loadTexture("textures/perlin-512.png");
+  self.particleNoiseTex = THREE.ImageUtils.loadTexture("img/perlin-512.png");
   self.particleNoiseTex.wrapS = self.particleNoiseTex.wrapT = THREE.RepeatWrapping;
 
-  self.particleSpriteTex = THREE.ImageUtils.loadTexture("textures/particle2.png");
+  self.particleSpriteTex = THREE.ImageUtils.loadTexture("img/particle2.png");
   self.particleSpriteTex.wrapS = self.particleSpriteTex.wrapT = THREE.RepeatWrapping;
 
   self.particleShaderMat = new THREE.ShaderMaterial({
