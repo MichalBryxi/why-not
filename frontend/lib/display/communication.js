@@ -7,20 +7,19 @@ socket.on("server2display", function(msg) {
       id = msg.message.id,
       row = rows[id];
 
-  console.log(rows);
-  // row.l.light.x = x;
-  // row.l.light.y = y;
-  // row.l.light.z = z;
-  // row.r.light.x = x;
-  // row.r.light.y = y;
-  // row.r.light.z = z - 1500;
-
   row.l.position.x = x;
   row.l.position.y = y;
   row.l.position.z = z;
   row.r.position.x = x;
   row.r.position.y = y;
   row.r.position.z = z - 1500;
+
+  row.l.light.position.x = x;
+  row.l.light.position.y = y;
+  row.l.light.position.z = z;
+  row.r.light.position.x = x;
+  row.r.light.position.y = y;
+  row.r.light.position.z = z - 1500;
 
   // pointLightL.position.x = x;
   // pointLightL.position.y = y;

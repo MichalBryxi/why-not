@@ -12,15 +12,15 @@ var spawnerparticlesL = {
 }
 
 var rows = [{}, {}, {}, {}];
-rows = rows.map(function (row) {
-  return {
-    l: {
-      position: new THREE.Vector3()
-    },
-    r: {
-      position: new THREE.Vector3()
-    }
-  }
+rows.forEach(function (row) {
+  row.l = {
+    position: new THREE.Vector3(),
+    light: null
+  };
+  row.r = {
+    position: new THREE.Vector3(),
+    light: null
+  };
 });
 
 function initFireflies () {
@@ -43,9 +43,10 @@ function initFireflies () {
     return newLight
   }
 
-  _(rows).forEach(function (row) {
-    row.l.light = createLight( 0xaa0000 );
-    row.r.light = createLight( 0x0000aa );
+  colors = [0xaa0000, 0x00aa00, 0x0000aa, 0xaa00aa];
+  rows.forEach(function (row, index) {
+    row.l.light = createLight(colors[index]);
+    row.r.light = createLight(colors[index]);
 
     scene.add( row.l.light );
     scene.add( row.r.light );
@@ -53,7 +54,7 @@ function initFireflies () {
 }
 
 function initParticles () {
-  _(rows).forEach(function (row) {
+  rows.forEach(function (row) {
     row.l.particles = new THREE.GPUParticleSystem({
       maxParticles: 2500,
       position: new THREE.Vector3(),

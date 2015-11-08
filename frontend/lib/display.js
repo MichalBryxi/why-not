@@ -32,7 +32,7 @@ function render() {
 
   if (tick < 0) tick = 0;
 
-  _(rows).forEach(function (row) {
+  rows.forEach(function (row) {
     if (delta > 0) {
         row.l.particles.spawnParticle(row.l);
         row.r.particles.spawnParticle(row.r);
